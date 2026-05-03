@@ -117,6 +117,8 @@ Ledger-backed prepaid balance the merchant must have available to fulfill provid
 
 Services Balance funds three MVP product families with different validation shapes: Service Bills use Provider Pre-Validation with bill amount, Service Fee, and customer total; Telepeaje uses lightweight account or tag validation before payment; Gift Cards use fixed-denomination product availability validation before payment. Telepeaje and Gift Cards do not use the 2-minute bill pre-validation flow unless a provider explicitly requires it.
 
+Provider Pre-Validation alone does not reserve Services Balance. CTC Pay reserves Services Balance only after cash payment is confirmed or electronic customer payment is authorized, because the merchant's funds should not be locked before the customer commits to pay.
+
 For in-flight provider operations, Services Balance is reserved after cash confirmation or electronic payment authorization and before final provider submission. The reserved debit prevents double-spending available balance. If the provider confirms success or Accepted Pending, the reserve becomes final and electronic customer payment is captured. If the provider fails before capture, the reserve is released, the authorization is voided, and the operation returns to the last stable audited state. Refund-required handling is reserved for captured payments, non-voidable rails, or cash failures where the merchant already received customer funds.
 
 Available Services Balance must cover the full required debit before customer payment is accepted. The full debit includes the provider bill amount plus configured CTC Pay and provider costs; covering only the provider bill is not enough.
