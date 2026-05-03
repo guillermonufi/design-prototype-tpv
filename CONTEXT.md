@@ -88,6 +88,8 @@ Successful provider-backed operations move value from the merchant's reserved ba
 
 Ledger-backed prepaid balance the merchant must have available to sell tiempo aire. Airtime operations require customer payment received and consume Airtime Balance when fulfilled. TAE commission is credited upfront as bonus Airtime Balance when the merchant buys balance. For example, if the merchant pays 100 MXN and receives 105 MXN of Airtime Balance, the extra 5 MXN is the merchant's embedded margin.
 
+Changes to a merchant's TAE commission agreement apply only to future Airtime top-ups. Already credited Airtime Balance is not recalculated retroactively; corrections use explicit adjustment or reversal entries when needed.
+
 Available Airtime Balance must cover the recharge amount before customer payment is accepted. If Airtime Balance is insufficient, CTC Pay blocks the operation and prompts the merchant to request a top-up.
 
 TAE uses lightweight product availability validation before customer payment: the carrier must exist, the amount or package must be valid for that carrier, and Airtime Balance must be sufficient. TAE does not use the same 2-minute provider bill pre-validation flow unless a provider requires it.
