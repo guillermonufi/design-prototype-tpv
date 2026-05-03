@@ -53,6 +53,8 @@ _Avoid_: Merchant Spread, Service Fee.
 
 Passing Payment Processing Fees through to the customer as a surcharge is not assumed for MVP. Any surcharge, convenience fee, or customer-facing fee pass-through must be validated against local regulation, processor rules, and required customer disclosures before CTC Pay models it as supported behavior.
 
+For MVP, Payment Processing Fees are settlement and reporting data, not transaction-time promises. Service transaction details may explain that electronic payment fees apply to settlement, but exact fee amounts should be shown after the processor confirms them.
+
 ### Payment Rail Capability
 
 The settlement behavior a customer payment method actually supports, such as authorization-before-capture, immediate capture, void, refund, or non-voidable settlement.
@@ -66,7 +68,7 @@ _Avoid_: Lookup, search, reference found.
 
 ### Movement
 
-User-facing copy for items shown in history. Movement is not a separate domain object from Transaction. The history should use one unified feed by default, with filters and clear labels for operation family, product, customer payment method, balance impact, merchant earning, and status. Top-Up requests appear in the feed with requested, approved/credited, or rejected/cancelled status. Pre-validation audit events are not shown as regular movements unless needed for audit review.
+User-facing copy for items shown in history. Movement is not a separate domain object from Transaction. The history should use one unified feed by default, with filters and clear labels for operation family, product, customer payment method, balance impact, merchant earning, and status. Top-Up requests appear in the feed with requested, approved/credited, or rejected/cancelled status. Pre-validation audit events are not shown as regular movements unless needed for audit review. Electronic payment fee amounts should appear in settlement or reporting views once confirmed, not as guaranteed values in the original service Movement.
 
 ### Dashboard Balances
 
