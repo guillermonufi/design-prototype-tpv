@@ -16,7 +16,7 @@ A merchant-initiated action in CTC Pay, such as selling airtime, charging a cust
 
 ### Transaction
 
-The persisted financial or provider record created after customer payment is captured or cash is confirmed and balance is reserved. Pre-validation attempts and voided electronic authorizations are audit events, not Transactions, because no captured customer payment or final balance movement has occurred yet.
+The persisted financial or provider record created after customer payment is captured or cash is confirmed, merchant balance is reserved, and provider fulfillment is successful or Accepted Pending. Pre-validation attempts, cash confirmation before provider acceptance, in-flight balance reserves, and voided electronic authorizations are audit events, not regular Transactions, because no final provider-accepted operation has occurred yet.
 
 Transactions represent completed amount-affecting operations in the normal merchant history UI. If a payment is not completed, customer-facing amounts are not modified and the attempt should not appear as a regular Movement.
 
