@@ -66,6 +66,7 @@ _Avoid_: Assuming capability from UI labels like QR, card, or debit.
 
 The provider confirmation that a referenced bill or product is currently payable before the merchant accepts customer payment.
 Provider Pre-Validation is required for Service Bills, where the provider returns a payable bill amount and CTC Pay adds the configured Service Fee to show the final customer total before payment.
+For Service Bills, an active Provider Pre-Validation may survive a customer payment method change while the validation is unexpired and the customer total remains unchanged. Payment method changes affect payment orchestration, settlement, and fee reporting; they do not require provider re-validation unless they change the validated bill amount, Service Fee, or customer total.
 _Avoid_: Lookup, search, reference found.
 
 ### Movement
