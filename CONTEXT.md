@@ -46,6 +46,11 @@ _Avoid_: Refund, reversal.
 A provider-backed operation failure where customer funds were already captured or the payment rail cannot be voided, so the merchant must refund the customer or resolve the case through support.
 _Avoid_: Normal pending state.
 
+### Payment Rail Capability
+
+The settlement behavior a customer payment method actually supports, such as authorization-before-capture, immediate capture, void, refund, or non-voidable settlement.
+_Avoid_: Assuming capability from UI labels like QR, card, or debit.
+
 ### Provider Pre-Validation
 
 The provider confirmation that a referenced bill or product is currently payable before the merchant accepts customer payment.
@@ -80,7 +85,7 @@ If a TAE provider recharge fails after customer payment was captured, accepted a
 
 ### Customer-Paid Operation
 
-A provider-backed operation where the customer pays the merchant at the counter, but CTC Pay fulfills the provider side by reserving or debiting the merchant's prepaid Airtime Balance or Services Balance. Provider pre-validation must confirm the bill or product is payable before customer payment is accepted. For cash payments, the merchant must explicitly mark customer payment received before CTC Pay reserves balance and sends or confirms provider fulfillment. For card or debit payments, the processor should authorize the customer payment before CTC Pay reserves balance and submits provider fulfillment, then capture only after the provider confirms success or Accepted Pending. If the provider fails before capture, CTC Pay voids the authorization and releases the balance reserve instead of creating a refund-required Transaction.
+A provider-backed operation where the customer pays the merchant at the counter, but CTC Pay fulfills the provider side by reserving or debiting the merchant's prepaid Airtime Balance or Services Balance. Provider pre-validation must confirm the bill or product is payable before customer payment is accepted. For cash payments, the merchant must explicitly mark customer payment received before CTC Pay reserves balance and sends or confirms provider fulfillment. For electronic payments, CTC Pay must classify the payment rail by Payment Rail Capability rather than by UI label; authorization-capable card, debit, or QR rails should authorize before CTC Pay reserves balance and submits provider fulfillment, then capture only after the provider confirms success or Accepted Pending. If the provider fails before capture, CTC Pay voids the authorization and releases the balance reserve instead of creating a refund-required Transaction. Immediate-capture, non-voidable, or otherwise non-authorization-capable rails use refund-required handling if provider fulfillment fails after customer funds move.
 
 ### Merchant Collection
 
@@ -117,4 +122,4 @@ The additional amount charged to the customer on top of the provider bill. Servi
 
 ### Merchant of Record
 
-For customer card, debit, or QR payments, the merchant is the merchant of record. CTC Pay may facilitate authorization, capture, void, and refund timing, but the card processor settles the customer payment to the merchant's bank account, minus applicable processing fees. For provider-backed operations, CTC Pay earns from the Services Balance debit, not by holding the customer's payment. For Merchant Collection, CTC Pay may charge processing, software, or platform fees according to agreement.
+For customer card, debit, or QR payments, the merchant is the merchant of record. CTC Pay may facilitate authorization, capture, void, and refund timing according to each payment rail's capability, but the processor settles the customer payment to the merchant's bank account, minus applicable processing fees. For provider-backed operations, CTC Pay earns from the Services Balance debit, not by holding the customer's payment. For Merchant Collection, CTC Pay may charge processing, software, or platform fees according to agreement.
