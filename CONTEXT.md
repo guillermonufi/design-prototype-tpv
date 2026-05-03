@@ -121,7 +121,7 @@ Airtime Balance and Services Balance remain separate for MVP because TAE margin 
 
 ### Top-Up
 
-A merchant request to add prepaid value to Airtime Balance or Services Balance. For MVP, top-ups are manual and admin-approved: the merchant requests an amount and balance type, pays CTC Pay outside the app or through an enabled payment rail, and an admin confirms external payment evidence before crediting the balance. A request alone is not sufficient to credit balance. Every top-up credit must be auditable and linked to the approving admin, confirmed evidence, credited balance type, credited amount, and timestamp. Airtime top-ups use preset packages because bonus margin can depend on the package or agreement. Services top-ups allow a free amount with a minimum because they credit 1:1.
+A merchant request to add prepaid value to Airtime Balance or Services Balance. For MVP, top-ups are manual and admin-approved: the merchant requests an amount and balance type, pays CTC Pay outside the app or through an enabled payment rail, and an admin confirms external payment evidence before crediting the balance. A request alone is not sufficient to credit balance. Every top-up credit must be auditable and linked to the approving admin, confirmed evidence, credited balance type, credited amount, and timestamp. Airtime top-ups use preset packages because bonus margin can depend on the package or agreement. Services top-ups allow any custom amount that meets the configured minimum because they credit 1:1 with no package bonus.
 
 ### Merchant Spread
 
