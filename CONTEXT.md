@@ -51,6 +51,8 @@ _Avoid_: Normal pending state.
 The fee charged by a payment processor or payment rail for handling an electronic customer payment.
 _Avoid_: Merchant Spread, Service Fee.
 
+Passing Payment Processing Fees through to the customer as a surcharge is not assumed for MVP. Any surcharge, convenience fee, or customer-facing fee pass-through must be validated against local regulation, processor rules, and required customer disclosures before CTC Pay models it as supported behavior.
+
 ### Payment Rail Capability
 
 The settlement behavior a customer payment method actually supports, such as authorization-before-capture, immediate capture, void, refund, or non-voidable settlement.
