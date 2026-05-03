@@ -16,7 +16,7 @@ A merchant-initiated action in CTC Pay, such as selling airtime, charging a cust
 
 ### Transaction
 
-The persisted financial or provider record created after customer payment succeeds and balance is reserved. Pre-validation attempts are audit events, not Transactions, because no customer payment or balance movement has occurred yet.
+The persisted financial or provider record created after customer payment is captured or cash is confirmed and balance is reserved. Pre-validation attempts and voided electronic authorizations are audit events, not Transactions, because no captured customer payment or final balance movement has occurred yet.
 
 Transactions represent completed amount-affecting operations in the normal merchant history UI. If a payment is not completed, customer-facing amounts are not modified and the attempt should not appear as a regular Movement.
 
@@ -25,6 +25,26 @@ Provider Pre-Validation exists to prevent normal pending or refund-required merc
 If an exceptional provider failure happens after customer payment despite pre-validation, it should be handled through support or audit tooling instead of being modeled as a normal history state in the MVP UI.
 
 Provider operations must reach a provider pre-validation checkpoint before customer payment is accepted. If pre-validation is not confirmed, the customer payment must not proceed. Pre-validation expires after 2 minutes for MVP; after expiry, the merchant must re-run validation before accepting payment. Failures are audited and retried from the previous stable state, not from an uncertain partial state.
+
+### Authorized Customer Payment
+
+An electronic customer payment that the processor has approved and held but not captured.
+_Avoid_: Completed payment, settled payment.
+
+### Captured Customer Payment
+
+An electronic customer payment that the processor has captured and will settle to the merchant according to the merchant's processing agreement.
+_Avoid_: Authorization, hold.
+
+### Voided Authorization
+
+An electronic customer payment authorization released before capture, normally because provider fulfillment was not accepted.
+_Avoid_: Refund, reversal.
+
+### Refund-Required Provider Failure
+
+A provider-backed operation failure where customer funds were already captured or the payment rail cannot be voided, so the merchant must refund the customer or resolve the case through support.
+_Avoid_: Normal pending state.
 
 ### Provider Pre-Validation
 
@@ -56,11 +76,11 @@ Available Airtime Balance must cover the recharge amount before customer payment
 
 TAE uses lightweight product availability validation before customer payment: the carrier must exist, the amount or package must be valid for that carrier, and Airtime Balance must be sufficient. TAE does not use the same 2-minute provider bill pre-validation flow unless a provider requires it.
 
-If a TAE provider recharge fails after customer payment was received, the transaction enters a refund-required state. Any Airtime Balance reserve or debit is released or reversed, the merchant refunds the customer or retries, and the failed attempt remains auditable.
+If a TAE provider recharge fails after customer payment was captured, accepted as cash, or processed on a non-voidable rail, the transaction enters a refund-required state. Any Airtime Balance reserve or debit is released or reversed, the merchant refunds the customer or retries, and the failed attempt remains auditable. If TAE uses card or debit authorization before capture, immediate provider failure voids the authorization instead of creating a refund-required Transaction.
 
 ### Customer-Paid Operation
 
-A provider-backed operation where the customer pays the merchant at the counter, but CTC Pay fulfills the provider side by reserving or debiting the merchant's prepaid Airtime Balance or Services Balance. Provider pre-validation must confirm the bill or product is payable before customer payment is accepted. For cash payments, the merchant must explicitly mark customer payment received before CTC Pay reserves balance and sends or confirms provider fulfillment. For card or debit payments, the card processor must confirm payment succeeded before CTC Pay reserves balance and submits provider fulfillment.
+A provider-backed operation where the customer pays the merchant at the counter, but CTC Pay fulfills the provider side by reserving or debiting the merchant's prepaid Airtime Balance or Services Balance. Provider pre-validation must confirm the bill or product is payable before customer payment is accepted. For cash payments, the merchant must explicitly mark customer payment received before CTC Pay reserves balance and sends or confirms provider fulfillment. For card or debit payments, the processor should authorize the customer payment before CTC Pay reserves balance and submits provider fulfillment, then capture only after the provider confirms success or Accepted Pending. If the provider fails before capture, CTC Pay voids the authorization and releases the balance reserve instead of creating a refund-required Transaction.
 
 ### Merchant Collection
 
@@ -73,11 +93,11 @@ _Avoid_: Treating accepted vales as provider-backed voucher issuance or Services
 
 ### Services Balance
 
-Ledger-backed prepaid balance the merchant must have available to fulfill provider-backed operations other than TAE, including service bills, telepeaje, and gift cards. Services Balance top-ups credit 1:1 with no bonus; service earnings happen later through Merchant Spread. When the customer pays cash, the merchant keeps the cash and CTC Pay debits Services Balance immediately. When the customer pays by credit or debit card, CTC Pay still debits Services Balance immediately and the card processor settles the customer payment to the merchant's bank account later, minus applicable card processing fees.
+Ledger-backed prepaid balance the merchant must have available to fulfill provider-backed operations other than TAE, including service bills, telepeaje, and gift cards. Services Balance top-ups credit 1:1 with no bonus; service earnings happen later through Merchant Spread. When the customer pays cash, the merchant keeps the cash and CTC Pay debits Services Balance immediately after the merchant confirms cash received. When the customer pays by credit or debit card, CTC Pay reserves Services Balance after customer payment authorization, finalizes the debit only after provider acceptance, and the card processor captures and settles the customer payment to the merchant's bank account later, minus applicable card processing fees.
 
 Services Balance funds three MVP product families with different validation shapes: Service Bills use Provider Pre-Validation with bill amount, Service Fee, and customer total; Telepeaje uses lightweight account or tag validation before payment; Gift Cards use fixed-denomination product availability validation before payment. Telepeaje and Gift Cards do not use the 2-minute bill pre-validation flow unless a provider explicitly requires it.
 
-For in-flight provider operations, Services Balance is reserved immediately after customer payment succeeds and before final provider submission. The reserved debit prevents double-spending available balance. If the provider confirms success or accepted pending, the reserve becomes final. If the provider fails immediately, the reserve is released or reversed and the operation returns to the last stable audited state.
+For in-flight provider operations, Services Balance is reserved after cash confirmation or electronic payment authorization and before final provider submission. The reserved debit prevents double-spending available balance. If the provider confirms success or Accepted Pending, the reserve becomes final and electronic customer payment is captured. If the provider fails before capture, the reserve is released, the authorization is voided, and the operation returns to the last stable audited state. Refund-required handling is reserved for captured payments, non-voidable rails, or cash failures where the merchant already received customer funds.
 
 Available Services Balance must cover the full required debit before customer payment is accepted. The full debit includes the provider bill amount plus configured CTC Pay and provider costs; covering only the provider bill is not enough.
 
@@ -97,4 +117,4 @@ The additional amount charged to the customer on top of the provider bill. Servi
 
 ### Merchant of Record
 
-For customer card, debit, or QR payments, the merchant is the merchant of record. CTC Pay may facilitate the operation, but the card processor settles the customer payment to the merchant's bank account, minus applicable processing fees. For provider-backed operations, CTC Pay earns from the Services Balance debit, not by holding the customer's payment. For Merchant Collection, CTC Pay may charge processing, software, or platform fees according to agreement.
+For customer card, debit, or QR payments, the merchant is the merchant of record. CTC Pay may facilitate authorization, capture, void, and refund timing, but the card processor settles the customer payment to the merchant's bank account, minus applicable processing fees. For provider-backed operations, CTC Pay earns from the Services Balance debit, not by holding the customer's payment. For Merchant Collection, CTC Pay may charge processing, software, or platform fees according to agreement.
