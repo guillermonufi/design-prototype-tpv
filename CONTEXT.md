@@ -55,6 +55,8 @@ Passing Payment Processing Fees through to the customer as a surcharge is not as
 
 For MVP, Payment Processing Fees are settlement and reporting data, not transaction-time promises. Service transaction details may explain that electronic payment fees apply to settlement, but exact fee amounts should be shown after the processor confirms them.
 
+Payment Processing Fee reversals on refunds are outside MVP transaction behavior. When later supported, they must be shown as processor-dependent settlement or reporting events instead of assumed on the original service transaction.
+
 ### Payment Rail Capability
 
 The settlement behavior a customer payment method actually supports, such as authorization-before-capture, immediate capture, void, refund, or non-voidable settlement.
