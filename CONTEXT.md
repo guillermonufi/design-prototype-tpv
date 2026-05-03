@@ -123,6 +123,8 @@ For in-flight provider operations, Services Balance is reserved after cash confi
 
 Available Services Balance must cover the full required debit before customer payment is accepted. The full debit includes the provider bill amount plus configured CTC Pay and provider costs; covering only the provider bill is not enough.
 
+If available Services Balance is insufficient after Service Bill pre-validation, CTC Pay must block customer payment and prompt the merchant to request a Services Balance top-up. MVP must not accept customer payment, hold provider fulfillment, create a partial reserve, or allow admin override when Services Balance cannot cover the full required debit.
+
 Airtime Balance and Services Balance remain separate for MVP because TAE margin is credited upfront as bonus balance while service earnings come from Merchant Spread. They should not be merged into a shared operating balance unless the business explicitly allows bonus airtime value to fund service operations.
 
 ### Top-Up
