@@ -46,6 +46,11 @@ _Avoid_: Refund, reversal.
 A provider-backed operation failure where customer funds were already captured or the payment rail cannot be voided, so the merchant must refund the customer or resolve the case through support.
 _Avoid_: Normal pending state.
 
+### Payment Processing Fee
+
+The fee charged by a payment processor or payment rail for handling an electronic customer payment.
+_Avoid_: Merchant Spread, Service Fee.
+
 ### Payment Rail Capability
 
 The settlement behavior a customer payment method actually supports, such as authorization-before-capture, immediate capture, void, refund, or non-voidable settlement.
@@ -98,7 +103,7 @@ _Avoid_: Treating accepted vales as provider-backed voucher issuance or Services
 
 ### Services Balance
 
-Ledger-backed prepaid balance the merchant must have available to fulfill provider-backed operations other than TAE, including service bills, telepeaje, and gift cards. Services Balance top-ups credit 1:1 with no bonus; service earnings happen later through Merchant Spread. When the customer pays cash, the merchant keeps the cash and CTC Pay debits Services Balance immediately after the merchant confirms cash received. When the customer pays by credit or debit card, CTC Pay reserves Services Balance after customer payment authorization, finalizes the debit only after provider acceptance, and the card processor captures and settles the customer payment to the merchant's bank account later, minus applicable card processing fees.
+Ledger-backed prepaid balance the merchant must have available to fulfill provider-backed operations other than TAE, including service bills, telepeaje, and gift cards. Services Balance top-ups credit 1:1 with no bonus; service earnings happen later through Merchant Spread. When the customer pays cash, the merchant keeps the cash and CTC Pay debits Services Balance immediately after the merchant confirms cash received. When the customer pays by credit or debit card, CTC Pay reserves Services Balance after customer payment authorization, finalizes the debit only after provider acceptance, and the card processor captures and settles the customer payment to the merchant's bank account later, minus applicable Payment Processing Fees.
 
 Services Balance funds three MVP product families with different validation shapes: Service Bills use Provider Pre-Validation with bill amount, Service Fee, and customer total; Telepeaje uses lightweight account or tag validation before payment; Gift Cards use fixed-denomination product availability validation before payment. Telepeaje and Gift Cards do not use the 2-minute bill pre-validation flow unless a provider explicitly requires it.
 
@@ -116,10 +121,12 @@ A merchant request to add prepaid value to Airtime Balance or Services Balance. 
 
 The merchant's service-operation earnings created by charging the customer more than the amount debited from Services Balance. For example, if a customer pays an 87 MXN total for a 75 MXN bill and CTC Pay debits 82 MXN from Services Balance, the merchant keeps a 5 MXN spread. Merchant Spread is tracked as transaction metadata and reporting, not as a CTC Pay ledger account, because CTC Pay never controls that money.
 
+Merchant Spread is separate from Payment Processing Fees. If the customer pays a service operation with card, debit, QR, or vales, the regular electronic payment processing fees apply to the merchant's customer payment settlement without changing the Merchant Spread amount recorded for the service operation.
+
 ### Service Fee
 
 The additional amount charged to the customer on top of the provider bill. Service Fee is configured by provider or service category for MVP, not typed freely by the merchant. The merchant must see and confirm the final customer total before completing the operation.
 
 ### Merchant of Record
 
-For customer card, debit, or QR payments, the merchant is the merchant of record. CTC Pay may facilitate authorization, capture, void, and refund timing according to each payment rail's capability, but the processor settles the customer payment to the merchant's bank account, minus applicable processing fees. For provider-backed operations, CTC Pay earns from the Services Balance debit, not by holding the customer's payment. For Merchant Collection, CTC Pay may charge processing, software, or platform fees according to agreement.
+For customer card, debit, or QR payments, the merchant is the merchant of record. CTC Pay may facilitate authorization, capture, void, and refund timing according to each payment rail's capability, but the processor settles the customer payment to the merchant's bank account, minus applicable Payment Processing Fees. For provider-backed operations, CTC Pay earns from the Services Balance debit, not by holding the customer's payment. For Merchant Collection, CTC Pay may charge processing, software, or platform fees according to agreement.
